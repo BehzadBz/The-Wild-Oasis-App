@@ -1,5 +1,5 @@
 import { eachDayOfInterval } from "date-fns";
-import { SupabaseClient } from "@supabase/supabase-js";
+import { supabase } from "@/src/lib/supabase";
 
 // Define interfaces for the data structures
 interface Cabin {
@@ -34,7 +34,12 @@ interface Booking {
 }
 
 interface Settings {
-  // Define the fields for settings
+  id: number;
+  created_at: string; // Using string because Supabase returns timestamps as ISO strings
+  minBookingLength: number;
+  maxBookingLength: number;
+  maxGuestsPerBooking: number;
+  breakfastPrice: number;
 }
 
 interface Country {
@@ -42,11 +47,7 @@ interface Country {
   flag: string;
 }
 
-// Assuming supabase is already initialized somewhere in your project
-declare const supabase: SupabaseClient;
-
-/////////////
-// GET
+// Get
 
 export async function getCabin(id: string): Promise<Cabin | null> {
   const { data, error } = await supabase
@@ -103,7 +104,11 @@ export async function getGuest(email: string): Promise<Guest | null> {
     .eq("email", email)
     .single();
 
-  // No error here! We handle the possibility of no guest in the sign in callback
+  if (error) {
+    console.error(error);
+    return null;
+  }
+
   return data;
 }
 
@@ -126,7 +131,7 @@ export async function getBookings(guestId: string): Promise<Booking[]> {
   const { data, error } = await supabase
     .from("bookings")
     .select(
-      "id, created_at, startDate, endDate, numNights, numGuests, totalPrice, guestId, cabinId, cabins(name, image)",
+      "id, created_at, startDate, endDate, numNights, numGuests, totalPrice, guestId, cabinId, cabins!inner(name, image)",
     )
     .eq("guestId", guestId)
     .order("startDate");
@@ -136,22 +141,25 @@ export async function getBookings(guestId: string): Promise<Booking[]> {
     throw new Error("Bookings could not get loaded");
   }
 
-  return data;
+  return (data ?? []).map((booking) => ({
+    ...booking,
+    cabins: Array.isArray(booking.cabins) ? booking.cabins[0] : booking.cabins,
+  }));
 }
 
 export async function getBookedDatesByCabinId(
   cabinId: string,
 ): Promise<Date[]> {
-  let today = new Date();
+  const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
-  today = today.toISOString();
+  const todayISOString = today.toISOString(); // Keep today as a Date, store ISO string separately
 
   // Getting all bookings
   const { data, error } = await supabase
     .from("bookings")
     .select("*")
     .eq("cabinId", cabinId)
-    .or(`startDate.gte.${today},status.eq.checked-in`);
+    .or(`startDate.gte.${todayISOString},status.eq.checked-in`);
 
   if (error) {
     console.error(error);
@@ -159,7 +167,7 @@ export async function getBookedDatesByCabinId(
   }
 
   // Converting to actual dates to be displayed in the date picker
-  const bookedDates = data
+  return data
     .map((booking: Booking) => {
       return eachDayOfInterval({
         start: new Date(booking.startDate),
@@ -167,8 +175,6 @@ export async function getBookedDatesByCabinId(
       });
     })
     .flat();
-
-  return bookedDates;
 }
 
 export async function getSettings(): Promise<Settings | null> {
@@ -187,15 +193,13 @@ export async function getCountries(): Promise<Country[]> {
     const res = await fetch(
       "https://restcountries.com/v2/all?fields=name,flag",
     );
-    const countries: Country[] = await res.json();
-    return countries;
+    return await res.json();
   } catch {
     throw new Error("Could not fetch countries");
   }
 }
 
-/////////////
-// CREATE
+// Create
 
 export async function createGuest(
   newGuest: Partial<Guest>,
@@ -227,8 +231,7 @@ export async function createBooking(
   return data;
 }
 
-/////////////
-// UPDATE
+// Update
 
 // The updatedFields is an object which should ONLY contain the updated data
 export async function updateGuest(
@@ -267,8 +270,7 @@ export async function updateBooking(
   return data;
 }
 
-/////////////
-// DELETE
+// Delete
 
 export async function deleteBooking(id: string): Promise<void> {
   const { error } = await supabase.from("bookings").delete().eq("id", id);
