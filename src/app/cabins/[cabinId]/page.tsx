@@ -1,6 +1,7 @@
 import { EyeSlashIcon, MapPinIcon, UsersIcon } from "@heroicons/react/24/solid";
 import { Cabin, getCabin } from "@/src/lib/data-service";
 import Image from "next/image";
+import { Metadata } from "next";
 
 interface PageProps {
   params: {
@@ -8,12 +9,27 @@ interface PageProps {
   };
 }
 
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
+  const cabin = await getCabin(params.cabinId);
+
+  // Handle the case where cabin is null
+  if (!cabin) {
+    return {
+      title: "Cabin not found",
+    };
+  }
+
+  return { title: `Cabin ${cabin.name}` };
+}
+
 export default async function Page({ params }: PageProps) {
   const cabin: Cabin | null = await getCabin(params.cabinId);
 
   // Handle the case where cabin is null
   if (!cabin) {
-    return <div>Cabin not found</div>;
+    throw new Error("Cabin not found");
   }
 
   const { name, maxCapacity, image, description } = cabin;

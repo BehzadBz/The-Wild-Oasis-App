@@ -58,7 +58,7 @@ export async function getCabin(id: string): Promise<Cabin | null> {
     .single();
 
   if (error) {
-    console.error(error);
+    console.error("Error fetching cabin:", error.message || error);
     return null;
   }
 
@@ -76,7 +76,7 @@ export async function getCabinPrice(id: string): Promise<{
     .single();
 
   if (error) {
-    console.error(error);
+    console.error("Error fetching cabin price:", error.message || error);
     return null;
   }
 
@@ -90,7 +90,7 @@ export const getCabins = async function (): Promise<Cabin[]> {
     .order("name");
 
   if (error) {
-    console.error(error);
+    console.error("Error fetching cabins:", error.message || error);
     throw new Error("Cabins could not be loaded");
   }
 
@@ -106,7 +106,7 @@ export async function getGuest(email: string): Promise<Guest | null> {
     .single();
 
   if (error) {
-    console.error(error);
+    console.error("Error fetching guest:", error.message || error);
     return null;
   }
 
@@ -121,7 +121,7 @@ export async function getBooking(id: string): Promise<Booking | null> {
     .single();
 
   if (error) {
-    console.error(error);
+    console.error("Error fetching booking:", error.message || error);
     throw new Error("Booking could not get loaded");
   }
 
@@ -138,7 +138,7 @@ export async function getBookings(guestId: string): Promise<Booking[]> {
     .order("startDate");
 
   if (error) {
-    console.error(error);
+    console.error("Error fetching bookings:", error.message || error);
     throw new Error("Bookings could not get loaded");
   }
 
@@ -163,7 +163,7 @@ export async function getBookedDatesByCabinId(
     .or(`startDate.gte.${todayISOString},status.eq.checked-in`);
 
   if (error) {
-    console.error(error);
+    console.error("Error fetching booked dates:", error.message || error);
     throw new Error("Bookings could not get loaded");
   }
 
@@ -182,7 +182,7 @@ export async function getSettings(): Promise<Settings | null> {
   const { data, error } = await supabase.from("settings").select("*").single();
 
   if (error) {
-    console.error(error);
+    console.error("Error fetching settings:", error.message || error);
     throw new Error("Settings could not be loaded");
   }
 
@@ -208,8 +208,8 @@ export async function createGuest(
   const { data, error } = await supabase.from("guests").insert([newGuest]);
 
   if (error) {
-    console.error(error);
-    throw new Error("Guest could not be created");
+    console.error("Error fetching countries:", error);
+    throw new Error("Could not fetch countries");
   }
 
   return data;
