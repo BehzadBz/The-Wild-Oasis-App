@@ -2,13 +2,14 @@ import { eachDayOfInterval } from "date-fns";
 import { supabase } from "@/src/lib/supabase";
 
 // Define interfaces for the data structures
-interface Cabin {
+export interface Cabin {
   id: string;
   name: string;
   maxCapacity: number;
   regularPrice: number;
   discount: number;
   image: string;
+  description: string;
 }
 
 interface Guest {
@@ -85,7 +86,7 @@ export async function getCabinPrice(id: string): Promise<{
 export const getCabins = async function (): Promise<Cabin[]> {
   const { data, error } = await supabase
     .from("cabins")
-    .select("id, name, maxCapacity, regularPrice, discount, image")
+    .select("id, name, maxCapacity, regularPrice, discount, image, description")
     .order("name");
 
   if (error) {
