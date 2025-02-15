@@ -1,33 +1,28 @@
 import { EyeSlashIcon, MapPinIcon, UsersIcon } from "@heroicons/react/24/solid";
 import { Cabin, getCabin } from "@/src/lib/data-service";
 import Image from "next/image";
-import { Metadata } from "next";
 
-interface PageProps {
-  params: {
-    cabinId: string;
-  };
-}
+type Params = Promise<{ cabinId: string }>;
 
-export async function generateMetadata({
-  params,
-}: PageProps): Promise<Metadata> {
+// `generateMetadata` function expecting dynamic params, but without wrapping it as a Promise.
+export async function generateMetadata(props: { params: Params }) {
+  const params = await props.params;
   const cabin = await getCabin(params.cabinId);
 
-  // Handle the case where cabin is null
   if (!cabin) {
     return {
       title: "Cabin not found",
     };
   }
 
-  return { title: `Cabin ${cabin.name}` };
+  return { title: `${cabin.name}` };
 }
 
-export default async function Page({ params }: PageProps) {
+// Ensure the page function is typed as a Promise for async handling
+export default async function Page(props: { params: Params }) {
+  const params = await props.params;
   const cabin: Cabin | null = await getCabin(params.cabinId);
 
-  // Handle the case where cabin is null
   if (!cabin) {
     throw new Error("Cabin not found");
   }
@@ -48,7 +43,7 @@ export default async function Page({ params }: PageProps) {
 
         <div>
           <h3 className="text-accent-100 font-black text-7xl mb-5 translate-x-[-254px] bg-primary-950 p-6 pb-1 w-[150%]">
-            Cabin {name}
+            {name}
           </h3>
 
           <p className="text-lg text-primary-300 mb-10">{description}</p>

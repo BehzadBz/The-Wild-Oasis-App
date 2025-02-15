@@ -1,5 +1,6 @@
 import { eachDayOfInterval } from "date-fns";
 import { supabase } from "@/src/lib/supabase";
+import { notFound } from "next/navigation";
 
 // Define interfaces for the data structures
 export interface Cabin {
@@ -59,7 +60,17 @@ export async function getCabin(id: string): Promise<Cabin | null> {
 
   if (error) {
     console.error("Error fetching cabin:", error.message || error);
-    return null;
+
+    // Handle the case where no rows are returned
+    if (
+      error.message === "JSON object requested, multiple (or no) rows returned"
+    ) {
+      console.error("No cabin found with the provided ID:", id);
+      notFound();
+    }
+
+    // Handle other errors
+    throw new Error("Failed to fetch cabin");
   }
 
   return data;
