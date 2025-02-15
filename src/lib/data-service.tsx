@@ -212,7 +212,6 @@ export async function getCountries(): Promise<Country[]> {
 }
 
 // Create
-
 export async function createGuest(
   newGuest: Partial<Guest>,
 ): Promise<Guest | null> {
@@ -283,7 +282,6 @@ export async function updateBooking(
 }
 
 // Delete
-
 export async function deleteBooking(id: string): Promise<void> {
   const { error } = await supabase.from("bookings").delete().eq("id", id);
 

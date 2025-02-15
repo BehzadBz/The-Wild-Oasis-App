@@ -1,10 +1,9 @@
 import { EyeSlashIcon, MapPinIcon, UsersIcon } from "@heroicons/react/24/solid";
-import { Cabin, getCabin } from "@/src/lib/data-service";
+import { Cabin, getCabin, getCabins } from "@/src/lib/data-service";
 import Image from "next/image";
 
 type Params = Promise<{ cabinId: string }>;
 
-// `generateMetadata` function expecting dynamic params, but without wrapping it as a Promise.
 export async function generateMetadata(props: { params: Params }) {
   const params = await props.params;
   const cabin = await getCabin(params.cabinId);
@@ -18,7 +17,17 @@ export async function generateMetadata(props: { params: Params }) {
   return { title: `${cabin.name}` };
 }
 
-// Ensure the page function is typed as a Promise for async handling
+export async function generateStaticParams() {
+  const cabins = await getCabins();
+  if (!cabins || cabins.length === 0) {
+    console.warn("No cabins found for static generation.");
+  }
+
+  return cabins.map((cabin) => ({
+    cabinId: String(cabin.id),
+  }));
+}
+
 export default async function Page(props: { params: Params }) {
   const params = await props.params;
   const cabin: Cabin | null = await getCabin(params.cabinId);
