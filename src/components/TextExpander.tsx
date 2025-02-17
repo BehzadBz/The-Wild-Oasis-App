@@ -20,7 +20,7 @@ function TextExpander({ children }: TextExpanderProps) {
 
   return (
     <span className="relative inline-block w-full">
-      <motion.div
+      <motion.span
         ref={textRef}
         style={{ overflow: "hidden" }}
         animate={{ maxHeight: isExpanded ? maxHeight : 60 }}
@@ -28,7 +28,7 @@ function TextExpander({ children }: TextExpanderProps) {
         className="block"
       >
         {children}{" "}
-      </motion.div>
+      </motion.span>
       <button
         className="text-primary-700 border-b border-primary-700 leading-3 pb-1 ml-1 mt-2 block"
         onClick={() => setIsExpanded(!isExpanded)}
