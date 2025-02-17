@@ -1,10 +1,10 @@
 import { UsersIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import Link from "next/link";
-import { Cabin } from "@/src/lib/data-service";
+import { CabinType } from "@/src/lib/data-service";
 
 interface CabinCardProps {
-  cabin: Cabin;
+  cabin: CabinType;
 }
 
 function CabinCard({ cabin }: CabinCardProps) {

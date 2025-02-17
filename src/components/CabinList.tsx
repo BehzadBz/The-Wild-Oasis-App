@@ -1,5 +1,5 @@
 import CabinCard from "@/src/components/CabinCard";
-import { Cabin, getCabins } from "@/src/lib/data-service";
+import { CabinType, getCabins } from "@/src/lib/data-service";
 
 interface CabinListProps {
   filter: "all" | "small" | "medium" | "large" | string;
@@ -10,7 +10,7 @@ export default async function CabinList({ filter }: CabinListProps) {
 
   if (!cabins.length) return null;
 
-  let displayedCabins: Cabin[] = [];
+  let displayedCabins: CabinType[] = [];
 
   if (filter === "all") displayedCabins = cabins;
   if (filter === "small")

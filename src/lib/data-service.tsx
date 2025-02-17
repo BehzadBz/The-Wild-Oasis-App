@@ -3,7 +3,7 @@ import { supabase } from "@/src/lib/supabase";
 import { notFound } from "next/navigation";
 
 // Define interfaces for the data structures
-export interface Cabin {
+export interface CabinType {
   id: string;
   name: string;
   maxCapacity: number;
@@ -35,7 +35,7 @@ interface Booking {
   };
 }
 
-interface Settings {
+export interface Settings {
   id: number;
   created_at: string; // Using string because Supabase returns timestamps as ISO strings
   minBookingLength: number;
@@ -51,7 +51,7 @@ interface Country {
 
 // Get
 
-export async function getCabin(id: string): Promise<Cabin | null> {
+export async function getCabin(id: string): Promise<CabinType | null> {
   const { data, error } = await supabase
     .from("cabins")
     .select("*")
@@ -94,7 +94,7 @@ export async function getCabinPrice(id: string): Promise<{
   return data;
 }
 
-export const getCabins = async function (): Promise<Cabin[]> {
+export const getCabins = async function (): Promise<CabinType[]> {
   const { data, error } = await supabase
     .from("cabins")
     .select("id, name, maxCapacity, regularPrice, discount, image, description")
