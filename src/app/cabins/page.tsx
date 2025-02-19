@@ -9,12 +9,17 @@ export const metadata: Metadata = {
   title: "Cabins",
 };
 
+type SearchParams = {
+  capacity?: string;
+};
+
 type PageProps = {
-  searchParams: { capacity?: string };
+  searchParams: Promise<SearchParams>; // Change here to reflect that searchParams is a Promise
 };
 
 export default async function Page({ searchParams }: PageProps) {
-  const filter = searchParams.capacity ?? "all";
+  const params = await searchParams; // Await the promise
+  const filter = params.capacity ?? "all";
 
   return (
     <div>

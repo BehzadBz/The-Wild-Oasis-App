@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 
 interface UpdateProfileFormProps {
   children: ReactNode;
@@ -10,8 +10,6 @@ interface UpdateProfileFormProps {
 export default function UpdateProfileForm({
   children,
 }: UpdateProfileFormProps) {
-  const [count, setCount] = useState();
-
   const countryFlag = "pt.jpg";
   return (
     <div>
