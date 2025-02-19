@@ -4,7 +4,7 @@ import { isWithinInterval } from "date-fns";
 import { DayPicker, SelectRangeEventHandler } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { CabinType, Settings } from "@/src/lib/data-service";
-import { useReservation } from "@/src/components/ReservationContext";
+import { useReservation } from "@/src/context/ReservationContext";
 
 interface DateSelectorProps {
   settings: Settings | null;

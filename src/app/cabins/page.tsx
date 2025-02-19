@@ -13,7 +13,7 @@ type PageProps = {
   searchParams: { capacity?: string };
 };
 
-export default function Page({ searchParams }: PageProps) {
+export default async function Page({ searchParams }: PageProps) {
   const filter = searchParams.capacity ?? "all";
 
   return (

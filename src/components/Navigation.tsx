@@ -1,6 +1,7 @@
 import Link from "next/link";
+import User from "@/src/components/Guest";
 
-export default function Navigation() {
+export default async function Navigation() {
   return (
     <nav className="z-10 text-xl">
       <ul className="flex gap-16 items-center">
@@ -21,12 +22,7 @@ export default function Navigation() {
           </Link>
         </li>
         <li>
-          <Link
-            href="/account"
-            className="hover:text-accent-400 transition-colors"
-          >
-            Guest area
-          </Link>
+          <User />
         </li>
       </ul>
     </nav>

@@ -14,7 +14,7 @@ function TextExpander({ children }: TextExpanderProps) {
 
   useEffect(() => {
     if (textRef.current) {
-      setMaxHeight(textRef.current.scrollHeight);
+      setMaxHeight(textRef.current.scrollHeight || 0);
     }
   }, [children]);
 
@@ -22,7 +22,7 @@ function TextExpander({ children }: TextExpanderProps) {
     <span className="relative inline-block w-full">
       <motion.span
         ref={textRef}
-        style={{ overflow: "hidden" }}
+        style={{ overflow: "hidden", maxHeight: 0 }}
         animate={{ maxHeight: isExpanded ? maxHeight : 60 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
         className="block"
