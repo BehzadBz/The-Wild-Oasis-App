@@ -13,9 +13,14 @@ const authConfig = {
       return !!auth?.user;
     },
   },
+  pages: {
+    signIn: "/login",
+  },
 } satisfies Parameters<typeof NextAuth>[0]; // Infer the type from NextAuth
 
 export const {
   auth,
+  signIn,
+  signOut,
   handlers: { GET, POST },
 } = NextAuth(authConfig);
