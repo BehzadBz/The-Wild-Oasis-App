@@ -13,9 +13,14 @@ export interface CabinType {
   description: string;
 }
 
-interface Guest {
+export interface Guest {
   id: string;
-  email: string;
+  email?: string;
+  fullName?: string;
+  nationality: string;
+  nationalID: string;
+  countryFlag: string;
+  guestId?: string;
   // Add other fields as necessary
 }
 

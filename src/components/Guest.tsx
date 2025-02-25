@@ -6,6 +6,7 @@ import Image from "next/image";
 
 export default function User() {
   const session = useAuth();
+  console.log(session);
 
   return (
     <div>

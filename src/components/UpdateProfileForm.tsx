@@ -1,23 +1,32 @@
 "use client";
 
-import Image from "next/image";
 import { ReactNode } from "react";
+import { updateGuest } from "@/src/lib/actions";
+import Image from "next/image";
+import { Guest } from "@/src/lib/data-service"; // Import Guest type
 
 interface UpdateProfileFormProps {
+  guest: Guest;
   children: ReactNode;
 }
 
 export default function UpdateProfileForm({
+  guest,
   children,
 }: UpdateProfileFormProps) {
-  const countryFlag = "pt.jpg";
+  const { fullName, email, nationality, nationalID, countryFlag } = guest;
+
   return (
     <div>
-      <form className="bg-primary-900 py-8 px-12 text-lg flex gap-6 flex-col">
+      <form
+        action={updateGuest}
+        className="bg-primary-900 py-8 px-12 text-lg flex gap-6 flex-col"
+      >
         <div className="space-y-2">
           <label>Full name</label>
           <input
             disabled
+            defaultValue={fullName}
             className="px-5 py-3 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm disabled:cursor-not-allowed disabled:bg-gray-600 disabled:text-gray-400"
           />
         </div>
@@ -26,19 +35,26 @@ export default function UpdateProfileForm({
           <label>Email address</label>
           <input
             disabled
+            defaultValue={email}
             className="px-5 py-3 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm disabled:cursor-not-allowed disabled:bg-gray-600 disabled:text-gray-400"
           />
         </div>
 
         <div className="space-y-2">
-          <div className="flex items-center justify-between relative">
+          <div className="flex items-center justify-between">
             <label htmlFor="nationality">Where are you from?</label>
-            <Image
-              src={countryFlag}
-              fill
-              alt="Country flag"
-              className="h-5 rounded-sm object-cover"
-            />
+            {countryFlag ? (
+              <div className="h-6 w-10 relative">
+                <Image
+                  src={countryFlag}
+                  fill
+                  alt="Country flag"
+                  className="h-5 rounded-sm object-cover"
+                />
+              </div>
+            ) : (
+              ""
+            )}
           </div>
 
           {children}
@@ -47,6 +63,7 @@ export default function UpdateProfileForm({
         <div className="space-y-2">
           <label htmlFor="nationalID">National ID number</label>
           <input
+            defaultValue={nationalID}
             name="nationalID"
             className="px-5 py-3 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm"
           />
