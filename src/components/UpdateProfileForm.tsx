@@ -14,7 +14,7 @@ export default function UpdateProfileForm({
   guest,
   children,
 }: UpdateProfileFormProps) {
-  const { fullName, email, nationality, nationalID, countryFlag } = guest;
+  const { fullName, email, nationalID, countryFlag } = guest;
 
   return (
     <div>
@@ -27,6 +27,7 @@ export default function UpdateProfileForm({
           <input
             disabled
             defaultValue={fullName}
+            name="fullName"
             className="px-5 py-3 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm disabled:cursor-not-allowed disabled:bg-gray-600 disabled:text-gray-400"
           />
         </div>
@@ -36,6 +37,7 @@ export default function UpdateProfileForm({
           <input
             disabled
             defaultValue={email}
+            name="email"
             className="px-5 py-3 bg-primary-200 text-primary-800 w-full shadow-sm rounded-sm disabled:cursor-not-allowed disabled:bg-gray-600 disabled:text-gray-400"
           />
         </div>
