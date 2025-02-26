@@ -24,7 +24,7 @@ export interface Guest {
   // Add other fields as necessary
 }
 
-interface Booking {
+export interface Booking {
   id: string;
   created_at: string;
   startDate: string;
@@ -38,6 +38,7 @@ interface Booking {
     name: string;
     image: string;
   };
+  status: string;
 }
 
 export interface Settings {
@@ -148,20 +149,35 @@ export async function getBookings(guestId: string): Promise<Booking[]> {
   const { data, error } = await supabase
     .from("bookings")
     .select(
-      "id, created_at, startDate, endDate, numNights, numGuests, totalPrice, guestId, cabinId, cabins!inner(name, image)",
+      "id, created_at, startDate, endDate, numNights, numGuests, totalPrice, guestId, cabinId, status, cabins(name, image)",
     )
     .eq("guestId", guestId)
     .order("startDate");
 
   if (error) {
     console.error("Error fetching bookings:", error.message || error);
-    throw new Error("Bookings could not get loaded");
+    throw new Error("Bookings could not be loaded");
   }
 
-  return (data ?? []).map((booking) => ({
-    ...booking,
-    cabins: Array.isArray(booking.cabins) ? booking.cabins[0] : booking.cabins,
-  }));
+  // Ensure data is an array before proceeding
+  if (!Array.isArray(data)) {
+    console.error("Unexpected data format from Supabase:", data);
+    return [];
+  }
+
+  return data.map((booking) => {
+    // Ensure cabins exist and handle cases where it's missing
+    const cabinData = booking.cabins
+      ? Array.isArray(booking.cabins)
+        ? booking.cabins[0]
+        : booking.cabins
+      : { name: "Unknown", image: "" };
+
+    return {
+      ...booking,
+      cabins: cabinData,
+    };
+  });
 }
 
 export async function getBookedDatesByCabinId(
