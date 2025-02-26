@@ -3,6 +3,7 @@
 import { auth, signIn, signOut } from "./auth";
 import { supabase } from "@/src/lib/supabase";
 import { revalidatePath } from "next/cache";
+import { getBookings } from "@/src/lib/data-service";
 
 const NATIONAL_ID_REGEX = /^[a-zA-Z0-9]{6,12}$/;
 
@@ -46,21 +47,33 @@ export async function updateGuest(formData: FormData): Promise<void> {
   revalidatePath("/account/profile");
 }
 
+export async function deleteReservation(bookingId: string) {
+  const session = await auth();
+  if (!session || !session.user.guestId)
+    throw new Error("You must be logged in to update guest information.");
+
+  const guestBookings = await getBookings(session.user.guestId);
+  const guestBookingIds = guestBookings.map((booking) => booking.id);
+
+  if (!guestBookingIds.includes(bookingId))
+    throw new Error("You are not" + " allowed to delete this booking!");
+
+  const { error } = await supabase
+    .from("bookings")
+    .delete()
+    .eq("id", bookingId);
+
+  if (error) throw new Error("Booking could not be deleted");
+
+  revalidatePath("/account/reservations");
+}
+
 export async function signInAction(): Promise<void> {
   await signIn("google", { redirectTo: "/account" });
 }
 
 export async function signOutAction(): Promise<void> {
-  // Clear Supabase client session (if using Supabase)
-  await supabase.auth.signOut();
-
-  // Clear server-side session
   await signOut({ redirectTo: "/" });
 
-  // Clear client-side state
-  localStorage.clear();
-  sessionStorage.clear();
-
-  // Force a page reload to reset the app state
-  window.location.href = "/";
+  revalidatePath("/");
 }
