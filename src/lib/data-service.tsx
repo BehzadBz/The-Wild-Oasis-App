@@ -21,11 +21,10 @@ export interface Guest {
   nationalID: string;
   countryFlag: string;
   guestId?: string;
-  // Add other fields as necessary
 }
 
 export interface Booking {
-  id: string;
+  id: string | number;
   created_at: string;
   startDate: string;
   endDate: string;
@@ -39,6 +38,7 @@ export interface Booking {
     image: string;
   };
   status: string;
+  observations?: string;
 }
 
 export interface Settings {
