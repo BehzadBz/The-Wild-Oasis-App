@@ -24,15 +24,18 @@ function ReservationCard({ booking, onDelete }: ReservationCardProps) {
     totalPrice,
     numGuests,
     created_at,
-    cabins: { name, image },
+    cabins,
   } = booking;
+
+  const cabinName = cabins?.name || "Unknown Cabin";
+  const cabinImage = cabins?.image || "/default-image.jpg";
 
   return (
     <div className="flex border border-primary-800">
       <div className="relative h-32 aspect-square">
         <Image
-          src={image}
-          alt={`Cabin ${name}`}
+          src={cabinImage}
+          alt={`Cabin ${cabinName}`}
           fill
           className="object-cover border-r border-primary-800"
         />
@@ -41,7 +44,7 @@ function ReservationCard({ booking, onDelete }: ReservationCardProps) {
       <div className="flex-grow px-6 py-3 flex flex-col">
         <div className="flex items-center justify-between">
           <h3 className="text-xl font-semibold">
-            {numNights} nights in Cabin {name}
+            {numNights} nights in Cabin {cabinName}
           </h3>
           {isPast(new Date(startDate)) ? (
             <span className="bg-yellow-800 text-yellow-200 h-7 px-3 uppercase text-xs font-bold flex items-center rounded-sm">
