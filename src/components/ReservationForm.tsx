@@ -25,7 +25,7 @@ function ReservationForm({ cabin }: ReservationFormProps) {
   const cabinPrice = numNights * (regularPrice - discount);
 
   const bookingData: Booking = {
-    id: "", // Add a default or generated id
+    // id: "", // Add a default or generated id
     created_at: new Date().toISOString(), // Add the current date as created_at
     startDate: startDate?.toISOString() ?? "",
     endDate: endDate?.toISOString() ?? "",

@@ -24,7 +24,7 @@ export interface Guest {
 }
 
 export interface Booking {
-  id: string | number;
+  id?: string | number;
   created_at: string;
   startDate: string;
   endDate: string;
