@@ -227,8 +227,19 @@ export async function getCountries(): Promise<Country[]> {
     const res = await fetch(
       "https://restcountries.com/v2/all?fields=name,flag"
     );
+
+    if (!res.ok) {
+      // Log the response status and status text if the fetch fails
+      console.error(
+        `Error fetching countries: ${res.status} ${res.statusText}`
+      );
+      throw new Error("Could not fetch countries");
+    }
+
     return await res.json();
-  } catch {
+  } catch (error) {
+    // Log the error details
+    console.error("Error fetching countries:", error);
     throw new Error("Could not fetch countries");
   }
 }
