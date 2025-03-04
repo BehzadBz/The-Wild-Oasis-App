@@ -24,20 +24,20 @@ export interface Guest {
 }
 
 export interface Booking {
-  id?: string | number;
-  created_at?: string;
+  id: string | number;
+  created_at: string;
   startDate: string;
   endDate: string;
   numNights: number;
-  numGuests?: number;
-  totalPrice?: number;
+  numGuests: number;
+  totalPrice: number;
   guestId?: string;
   cabinId: string;
-  cabins?: {
+  cabins: {
     name: string;
     image: string;
   };
-  status?: string;
+  status: string;
   observations?: string;
   cabinPrice?: number;
 }

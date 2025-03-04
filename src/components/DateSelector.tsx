@@ -28,9 +28,13 @@ function isAlreadyBooked(range: Range, datesArr: Date[]): boolean {
   }
 
   const interval = { start: range.from, end: range.to };
-  return datesArr.some((date) => {
-    return isWithinInterval(date, interval);
-  });
+  return (
+    range.from &&
+    range.to &&
+    datesArr.some((date) => {
+      return isWithinInterval(date, interval);
+    })
+  );
 }
 
 function DateSelector({ settings, cabin, bookedDates }: DateSelectorProps) {

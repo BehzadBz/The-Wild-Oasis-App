@@ -6,8 +6,12 @@ interface PageParams {
   bookingId: string;
 }
 
-export default async function Page({ params }: { params: PageParams }) {
-  const { bookingId } = params;
+export default async function Page({
+  params,
+}: {
+  params: Promise<PageParams>;
+}) {
+  const { bookingId } = await params;
   const booking = await getBooking(bookingId);
 
   if (!booking) {
@@ -49,7 +53,7 @@ export default async function Page({ params }: { params: PageParams }) {
                 <option value={x} key={x}>
                   {x} {x === 1 ? "guest" : "guests"}
                 </option>
-              ),
+              )
             )}
           </select>
         </div>

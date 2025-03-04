@@ -12,15 +12,15 @@ interface ReservationListProps {
 export default function ReservationList({ bookings }: ReservationListProps) {
   const [optimisticBookings, optimisticDelete] = useOptimistic(
     bookings,
-    (curBookings, bookingId: string) => {
+    (curBookings, bookingId: string | number) => {
       return curBookings.filter((booking) => booking.id !== bookingId);
     }
   );
 
-  async function handleDelete(bookingId: string) {
+  async function handleDelete(bookingId: string | number) {
     optimisticDelete(bookingId);
     try {
-      await deleteBooking(bookingId);
+      await deleteBooking(String(bookingId));
     } catch (error) {
       console.error("Failed to delete booking:", error);
       // Optionally, revert the optimistic update if the deletion fails

@@ -1,6 +1,6 @@
 "use client";
 
-import { CabinType } from "@/src/lib/data-service";
+import { Booking, CabinType } from "@/src/lib/data-service";
 import { useAuth } from "@/src/context/AuthContext";
 import Image from "next/image";
 import { useReservation } from "../context/ReservationContext";
@@ -24,12 +24,23 @@ function ReservationForm({ cabin }: ReservationFormProps) {
     startDate && endDate ? differenceInDays(endDate, startDate) : 0;
   const cabinPrice = numNights * (regularPrice - discount);
 
-  const bookingData = {
+  const bookingData: Booking = {
+    id: "", // Add a default or generated id
+    created_at: new Date().toISOString(), // Add the current date as created_at
     startDate: startDate?.toISOString() ?? "",
     endDate: endDate?.toISOString() ?? "",
     numNights,
-    cabinPrice,
+    numGuests: 0, // Add a default value for numGuests
+    totalPrice: cabinPrice, // Add totalPrice, which can be the same as cabinPrice
+    guestId: session?.user?.id ?? "", // Assuming session.user.id is the guestId
     cabinId: id ?? "",
+    cabins: {
+      name: cabin?.name ?? "Unknown",
+      image: cabin?.image ?? "",
+    },
+    status: "pending", // Add a default status
+    observations: "", // Add a default value for observations
+    cabinPrice, // Add cabinPrice
   };
 
   const createBookingWithData = createBooking.bind(null, bookingData);
@@ -57,6 +68,11 @@ function ReservationForm({ cabin }: ReservationFormProps) {
 
       <form
         action={async (FormData) => {
+          bookingData.numGuests = parseInt(
+            FormData.get("numGuests") as string,
+            10
+          );
+          bookingData.observations = FormData.get("observations") as string;
           await createBookingWithData(FormData);
           resetRange();
         }}
