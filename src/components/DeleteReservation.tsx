@@ -6,7 +6,7 @@ import { useTransition } from "react";
 import SpinnerMini from "@/src/components/SpinnerMini";
 
 interface DeleteReservationProps {
-  bookingId: string;
+  bookingId: string | number;
   onDelete: (bookingId: string) => void;
 }
 
@@ -18,7 +18,7 @@ export default function DeleteReservation({
 
   function handleDeleteReservation() {
     if (confirm("Are you sure you want to delete?")) {
-      startTransition(() => onDelete(bookingId));
+      startTransition(() => onDelete(String(bookingId)));
     }
   }
 
