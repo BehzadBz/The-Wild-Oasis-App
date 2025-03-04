@@ -7,6 +7,7 @@ import Header from "@/src/components/Header";
 import { ReservationProvider } from "@/src/context/ReservationContext";
 import { SessionProvider } from "next-auth/react";
 import { AuthProvider } from "@/src/context/AuthContext";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const josefin = Josefin_Sans({
   subsets: ["latin"],
@@ -43,6 +44,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             </div>
           </body>
         </html>
+        <SpeedInsights />
       </AuthProvider>
     </SessionProvider>
   );
