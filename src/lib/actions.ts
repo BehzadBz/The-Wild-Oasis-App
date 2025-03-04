@@ -52,34 +52,43 @@ export async function createBooking(
   bookingData: Booking,
   formData: FormData
 ): Promise<void> {
-  const session = await auth();
-  if (!session || !session.user.guestId)
-    throw new Error("You must be logged in to update guest information.");
+  try {
+    const session = await auth();
+    if (!session || !session.user.guestId)
+      throw new Error("You must be logged in to update guest information.");
 
-  const newBooking = {
-    ...bookingData,
-    guestId: session.user.guestId,
-    numGuests: Number(formData.get("numGuests")),
-    observations: (formData.get("observations") as string | null)?.slice(
-      0,
-      1000
-    ),
-    extrasPrice: 0,
-    totalPrice: bookingData.cabinPrice,
-    isPaid: false,
-    hasBreakfast: false,
-    status: "unconfirmed",
-  };
+    const newBooking = {
+      ...bookingData,
+      guestId: session.user.guestId,
+      numGuests: Number(formData.get("numGuests")),
+      observations: (formData.get("observations") as string | null)?.slice(
+        0,
+        1000
+      ),
+      extrasPrice: 0,
+      totalPrice: bookingData.cabinPrice,
+      isPaid: false,
+      hasBreakfast: false,
+      status: "unconfirmed",
+    };
 
-  const { error } = await supabase.from("bookings").insert([newBooking]);
+    const { error } = await supabase
+      .from("bookings")
+      .insert([newBooking])
+      .select()
+      .single();
 
-  if (error) {
-    console.error(error);
+    if (error) {
+      console.error("Error creating booking:", error.message || error);
+      throw new Error("Booking could not be created");
+    }
+
+    revalidatePath(`/cabins/${bookingData.cabinId}`);
+    redirect("/cabins/thankyou");
+  } catch (error) {
+    console.error("Unexpected error creating booking:", error);
     throw new Error("Booking could not be created");
   }
-
-  revalidatePath(`/cabins/${bookingData.cabinId}`);
-  redirect("/cabins/thankyou");
 }
 
 export async function deleteBooking(bookingId: string) {
