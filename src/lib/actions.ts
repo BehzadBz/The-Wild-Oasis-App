@@ -90,9 +90,6 @@ export async function deleteBooking(bookingId: string) {
   const guestBookings = await getBookings(session.user.guestId);
   const guestBookingIds = guestBookings.map((booking) => booking.id);
 
-  console.log("Booking ID to delete:", bookingId);
-  console.log("Guest Booking IDs:", guestBookingIds);
-
   const bookingIdNumber = Number(bookingId);
 
   if (!guestBookingIds.includes(bookingIdNumber))
