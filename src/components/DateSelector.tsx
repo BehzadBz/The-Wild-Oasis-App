@@ -33,8 +33,8 @@ function isAlreadyBooked(range: Range, datesArr: Date[]): boolean {
   });
 }
 
-function DateSelector({ settings, cabin }: DateSelectorProps) {
-  const { range, setRange, resetRange, bookedDates = [] } = useReservation();
+function DateSelector({ settings, cabin, bookedDates }: DateSelectorProps) {
+  const { range, setRange, resetRange } = useReservation();
 
   // Create a wrapper function to adapt setRange to SelectRangeEventHandler
   const handleRangeSelect: SelectRangeEventHandler = (selectedRange) => {
