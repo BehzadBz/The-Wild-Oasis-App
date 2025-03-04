@@ -4,20 +4,20 @@ import Link from "next/link";
 import { useAuth } from "@/src/context/AuthContext";
 import Image from "next/image";
 
-export default function User() {
-  const session = useAuth();
+export default function Guest() {
+  const { user } = useAuth();
 
   return (
     <div>
-      {session?.user?.image ? (
+      {user?.image ? (
         <Link
           href="/account"
           className="hover:text-accent-400 transition-colors flex items-center gap-4"
         >
           <div className="relative h-8 w-8">
             <Image
-              src={session.user.image}
-              alt={session.user.name ?? "User Profile"}
+              src={user.image}
+              alt={user.name ?? "User Profile"}
               fill
               className="rounded-full object-cover"
               referrerPolicy="no-referrer"

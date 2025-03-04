@@ -17,7 +17,7 @@ interface UpdateGuestProps {
 function validateNationalID(nationalID: string): void {
   if (!NATIONAL_ID_REGEX.test(nationalID)) {
     throw new Error(
-      "Invalid national ID. It must be 6-12 alphanumeric" + " characters.",
+      "Invalid national ID. It must be 6-12 alphanumeric" + " characters."
     );
   }
 }
@@ -85,7 +85,7 @@ export async function updateBooking(formData: FormData) {
     numGuests: Number(formData.get("numGuests")),
     observations: (formData.get("observations") as string | null)?.slice(
       0,
-      1000,
+      1000
     ),
   };
 
@@ -111,7 +111,12 @@ export async function signInAction(): Promise<void> {
 }
 
 export async function signOutAction(): Promise<void> {
-  await signOut({ redirectTo: "/" });
+  "use server";
 
-  revalidatePath("/");
+  const session = await auth();
+  if (!session?.user) {
+    return;
+  }
+  await signOut({ redirect: false });
+  redirect("/");
 }

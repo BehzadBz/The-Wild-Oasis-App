@@ -1,7 +1,7 @@
 import Link from "next/link";
-import User from "@/src/components/Guest";
+import Guest from "@/src/components/Guest";
 
-export default async function Navigation() {
+const Navigation = () => {
   return (
     <nav className="z-10 text-xl">
       <ul className="flex gap-16 items-center">
@@ -22,9 +22,11 @@ export default async function Navigation() {
           </Link>
         </li>
         <li>
-          <User />
+          <Guest />
         </li>
       </ul>
     </nav>
   );
-}
+};
+
+export default Navigation;
