@@ -17,6 +17,7 @@ interface ReservationContextType {
     }>
   >;
   resetRange: () => void;
+  bookedDates?: Date[] | undefined;
 }
 
 interface ReservationContextProps {
@@ -24,7 +25,7 @@ interface ReservationContextProps {
 }
 
 const ReservationContext = createContext<ReservationContextType | undefined>(
-  undefined,
+  undefined
 );
 
 function ReservationProvider({ children }: ReservationContextProps) {

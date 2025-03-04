@@ -4,6 +4,12 @@ import { DayPicker, SelectRangeEventHandler } from "react-day-picker";
 import "react-day-picker/dist/style.css";
 import { CabinType, Settings } from "@/src/lib/data-service";
 import { useReservation } from "@/src/context/ReservationContext";
+import {
+  differenceInDays,
+  isPast,
+  isSameDay,
+  isWithinInterval,
+} from "date-fns";
 
 interface DateSelectorProps {
   settings: Settings | null;
@@ -11,36 +17,41 @@ interface DateSelectorProps {
   cabin: CabinType;
 }
 
-// interface Range {
-//   from: Date | null;
-//   to: Date | null;
-// }
+interface Range {
+  from: Date | undefined;
+  to: Date | undefined;
+}
 
-// function isAlreadyBooked(range: Range, datesArr: Date[]): boolean {
-//   if (!range.from || !range.to) {
-//     return false;
-//   }
-//
-//   const interval = { start: range.from, end: range.to };
-//   return datesArr.some((date) => {
-//     return isWithinInterval(date, interval);
-//   });
-// }
+function isAlreadyBooked(range: Range, datesArr: Date[]): boolean {
+  if (!range.from || !range.to) {
+    return false;
+  }
+
+  const interval = { start: range.from, end: range.to };
+  return datesArr.some((date) => {
+    return isWithinInterval(date, interval);
+  });
+}
 
 function DateSelector({ settings, cabin }: DateSelectorProps) {
-  const { range, setRange, resetRange } = useReservation();
+  const { range, setRange, resetRange, bookedDates = [] } = useReservation();
 
   // Create a wrapper function to adapt setRange to SelectRangeEventHandler
   const handleRangeSelect: SelectRangeEventHandler = (selectedRange) => {
     setRange({
-      from: selectedRange?.from,
-      to: selectedRange?.to,
+      from: selectedRange?.from ?? undefined,
+      to: selectedRange?.to ?? undefined,
     });
   };
 
+  const displayRange = isAlreadyBooked(range, bookedDates) ? undefined : range;
+
   const regularPrice: number = cabin?.regularPrice;
   const discount: number = cabin?.discount;
-  const numNights: number = 0;
+  const numNights =
+    displayRange && displayRange.from && displayRange.to
+      ? differenceInDays(displayRange.to, displayRange.from)
+      : 0;
   const cabinPrice: number = numNights * (regularPrice - discount);
 
   // Settings
@@ -55,7 +66,7 @@ function DateSelector({ settings, cabin }: DateSelectorProps) {
         className="pt-12 place-self-center"
         mode="range"
         onSelect={handleRangeSelect}
-        selected={range}
+        selected={displayRange}
         min={minBookingLength + 1}
         max={maxBookingLength}
         fromMonth={new Date()}
@@ -63,6 +74,10 @@ function DateSelector({ settings, cabin }: DateSelectorProps) {
         toYear={new Date().getFullYear() + 5}
         captionLayout="dropdown"
         numberOfMonths={2}
+        disabled={(curDate) =>
+          isPast(curDate) ||
+          bookedDates.some((date) => isSameDay(date, curDate))
+        }
       />
 
       <div className="flex items-center justify-between px-8 bg-accent-500 text-primary-800 h-[72px]">
