@@ -72,11 +72,7 @@ export async function createBooking(
       status: "unconfirmed",
     };
 
-    const { error } = await supabase
-      .from("bookings")
-      .insert([newBooking])
-      .select()
-      .single();
+    const { error } = await supabase.from("bookings").insert([newBooking]);
 
     if (error) {
       console.error("Error creating booking:", error.message || error);
