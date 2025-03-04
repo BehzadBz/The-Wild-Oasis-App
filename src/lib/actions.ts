@@ -80,7 +80,7 @@ export async function createBooking(
     }
 
     revalidatePath(`/cabins/${bookingData.cabinId}`);
-    redirect("account/reservations");
+    // redirect("account/reservations");
   } catch (error) {
     console.error("Unexpected error creating booking:", error);
     throw new Error("Booking could not be created");
