@@ -3,7 +3,7 @@
 import { useOptimistic } from "react";
 import { Booking } from "../lib/data-service";
 import ReservationCard from "./ReservationCard";
-import { deleteReservation } from "@/src/lib/actions";
+import { deleteBooking } from "@/src/lib/actions";
 
 interface ReservationListProps {
   bookings: Booking[];
@@ -19,7 +19,7 @@ export default function ReservationList({ bookings }: ReservationListProps) {
 
   async function handleDelete(bookingId: string) {
     optimisticDelete(bookingId);
-    await deleteReservation(bookingId);
+    await deleteBooking(bookingId);
   }
 
   return (

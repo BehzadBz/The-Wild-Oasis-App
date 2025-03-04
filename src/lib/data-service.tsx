@@ -24,21 +24,22 @@ export interface Guest {
 }
 
 export interface Booking {
-  id: string | number;
-  created_at: string;
+  id?: string | number;
+  created_at?: string;
   startDate: string;
   endDate: string;
   numNights: number;
-  numGuests: number;
-  totalPrice: number;
-  guestId: string;
+  numGuests?: number;
+  totalPrice?: number;
+  guestId?: string;
   cabinId: string;
-  cabins: {
+  cabins?: {
     name: string;
     image: string;
   };
-  status: string;
+  status?: string;
   observations?: string;
+  cabinPrice?: number;
 }
 
 export interface Settings {
@@ -149,7 +150,7 @@ export async function getBookings(guestId: string): Promise<Booking[]> {
   const { data, error } = await supabase
     .from("bookings")
     .select(
-      "id, created_at, startDate, endDate, numNights, numGuests, totalPrice, guestId, cabinId, status, cabins(name, image)",
+      "id, created_at, startDate, endDate, numNights, numGuests, totalPrice, guestId, cabinId, status, cabins(name, image)"
     )
     .eq("guestId", guestId)
     .order("startDate");
@@ -181,7 +182,7 @@ export async function getBookings(guestId: string): Promise<Booking[]> {
 }
 
 export async function getBookedDatesByCabinId(
-  cabinId: string,
+  cabinId: string
 ): Promise<Date[]> {
   const today = new Date();
   today.setUTCHours(0, 0, 0, 0);
@@ -224,7 +225,7 @@ export async function getSettings(): Promise<Settings | null> {
 export async function getCountries(): Promise<Country[]> {
   try {
     const res = await fetch(
-      "https://restcountries.com/v2/all?fields=name,flag",
+      "https://restcountries.com/v2/all?fields=name,flag"
     );
     return await res.json();
   } catch {
@@ -234,7 +235,7 @@ export async function getCountries(): Promise<Country[]> {
 
 // Create
 export async function createGuest(
-  newGuest: Partial<Guest>,
+  newGuest: Partial<Guest>
 ): Promise<Guest | null> {
   const { data, error } = await supabase.from("guests").insert([newGuest]);
 
@@ -247,7 +248,7 @@ export async function createGuest(
 }
 
 export async function createBooking(
-  newBooking: Partial<Booking>,
+  newBooking: Partial<Booking>
 ): Promise<Booking | null> {
   const { data, error } = await supabase
     .from("bookings")
