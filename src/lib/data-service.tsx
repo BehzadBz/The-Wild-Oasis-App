@@ -33,7 +33,7 @@ export interface Booking {
   totalPrice: number;
   guestId?: string;
   cabinId: string;
-  cabins: {
+  cabins?: {
     name: string;
     image: string;
   };

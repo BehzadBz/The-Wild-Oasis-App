@@ -34,10 +34,10 @@ function ReservationForm({ cabin }: ReservationFormProps) {
     totalPrice: cabinPrice, // Add totalPrice, which can be the same as cabinPrice
     guestId: session?.user?.id ?? "", // Assuming session.user.id is the guestId
     cabinId: id ?? "",
-    cabins: {
-      name: cabin?.name ?? "Unknown",
-      image: cabin?.image ?? "",
-    },
+    // cabins: {
+    //   name: cabin?.name ?? "Unknown",
+    //   image: cabin?.image ?? "",
+    // },
     status: "pending", // Add a default status
     observations: "", // Add a default value for observations
     cabinPrice, // Add cabinPrice
